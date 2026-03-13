@@ -1,0 +1,27 @@
+<main class="container-fluid border round rounded-4 col-10 text-center shadow-lg bg-dark my-5 text-light ">
+  <div class="row">
+
+    <div class="user-nav-bar col-3 shadow-lg">
+
+      <img ngSrc="{{notFoundImage}}" width="40" height="40" alt="Profile Picture"/>
+      <p>Username</p>
+
+      <ul>
+        <li>Profile</li>
+        <li>Dashboard</li>
+        <li>Configuration</li>
+        <img src="{{notFoundImage}}" width="40" height="40" alt="logout-icon"/><span><li>Logout</li></span>
+      </ul>
+    </div>
+
+    <div class="user-main-dashboard col shadow-lg row mb-4">
+      <h2 class="fw-bold opacity-75 mt-2">Welcome back, {{username}}</h2>
+      <div class="col-8 border" >
+          main box
+      </div>
+      <div class="col border" >
+          main box
+      </div>
+    </div>
+  </div>
+</main>

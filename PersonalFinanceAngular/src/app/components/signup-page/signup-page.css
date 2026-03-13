@@ -12,3 +12,10 @@ button{
   background-color: #2C2C2C;
 }
 
+.alertInputs{
+  color: red;
+  font-weight: bolder;
+  font-size: 14px;
+  padding-left: 5%;
+}
+
