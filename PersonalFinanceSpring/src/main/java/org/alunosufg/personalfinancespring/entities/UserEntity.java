@@ -3,7 +3,9 @@ package org.alunosufg.personalfinancespring.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -23,6 +25,7 @@ public class UserEntity {
 
     @NotBlank
     @NonNull
+    @Length(min = 8, message = "Password must be 8-16 characters")
     private String password;
 
     @NotBlank

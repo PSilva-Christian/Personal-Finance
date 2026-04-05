@@ -17,6 +17,10 @@ export const routes: Routes = [
       path: 'dashboard',
       component: DashboardPage,
       canActivate:[routeGuard]
+    },
+    {
+      path: '**',
+      component: LoginPage
     }
 
 ];

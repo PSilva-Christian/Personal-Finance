@@ -1,62 +1,50 @@
 package org.alunosufg.personalfinancespring.controller;
 
+import jakarta.validation.Valid;
 import org.alunosufg.personalfinancespring.dto.LoginAuthDTO;
 import org.alunosufg.personalfinancespring.dto.RegisterRequestDTO;
 import org.alunosufg.personalfinancespring.dto.ResponseDTO;
 import org.alunosufg.personalfinancespring.entities.UserEntity;
-import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
-import org.alunosufg.personalfinancespring.security.TokenService;
 import org.alunosufg.personalfinancespring.services.UserAuthService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @RestController()
 @RequestMapping("/auth")
-@CrossOrigin(origins = "${ANGULAR_FRONTEND_URL}")
+@CrossOrigin(origins = "${angular.frontend.url}")
 public class UserAuthController {
-    private final TokenService tokenService;
-    private final UserAuthRepository userAuthRepository;
     private final UserAuthService userAuthService;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserAuthController(TokenService tokenService, UserAuthRepository userAuthRepository,
-                              UserAuthService userAuthService, PasswordEncoder passwordEncoder){
-        this.tokenService = tokenService;
-        this.userAuthRepository = userAuthRepository;
+    public UserAuthController(UserAuthService userAuthService ){
         this.userAuthService = userAuthService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
-        if ( body!= null && !userAuthService.existingUserInDatabase(body)) {
-            UserEntity userEntity = new UserEntity();
-            userEntity.setPassword(Objects.requireNonNull(passwordEncoder.encode(body.password())));
-            userEntity.setUsername(body.username());
-            userEntity.setEmail(body.email());
-            userAuthRepository.save(userEntity);
-            String token = tokenService.generateToken(userEntity);
-            return ResponseEntity.ok(new ResponseDTO(userEntity.getUsername(),userEntity.getEmail(), token));
+    public ResponseEntity<ResponseDTO> register(@Valid @RequestBody RegisterRequestDTO body)  {
+
+        if ( body != null) {
+            if (!userAuthService.existingUserInDatabase(body)) {
+                UserEntity newUser = userAuthService.registerUser(body);
+                return userAuthService.authUserResponse(newUser);
+            }
+
+            return userAuthService.credentialsAlreadyUsed(body);
+
         }
-        else{
-            return ResponseEntity.badRequest().build();
-        }
+
+        return userAuthService.wrongAuthCredentials("null");
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginAuthDTO body) {
-        UserEntity user = userAuthRepository.findByEmail(body.email()).orElse(null);
-        assert user != null;
-        if (passwordEncoder.matches(body.password(), user.getPassword())) {
-            String token = tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getUsername(),user.getEmail(), token));
+    public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginAuthDTO body) {
+
+        UserEntity userLog = userAuthService.loginUser(body);
+        if (userLog != null) {
+            return userAuthService.authUserResponse(userLog);
         }
-        else{
-            return ResponseEntity.badRequest().build();
-        }
+
+        return userAuthService.wrongAuthCredentials("Not found");
     }
 
 }

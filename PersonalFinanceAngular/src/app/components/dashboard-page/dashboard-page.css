@@ -17,6 +17,7 @@
   text-decoration: none;
 }
 
+
 .content {
   background-color: transparent;
   padding: 30px;
@@ -42,9 +43,9 @@ main{
   border-radius: 1rem;
 }
 
-a{
-  padding-bottom: 5%;
-  padding-top: 5%;
-  margin-top: 5%;
-  margin-bottom: 5%;
+.user-icon{
+  width: 96px;
+  height: 96px;
+
 }
+
