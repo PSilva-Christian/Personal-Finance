@@ -1,59 +1,59 @@
-  .dashboard-container {
-    min-height: 90vh;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-  }
+.dashboard-container {
+  min-height: 90vh;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
 
-  .sidebar {
-    background: rgba(0, 0, 0, 0.2);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    min-width: 240px;
-  }
+.sidebar {
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 240px;
+}
 
-  .nav-link-custom {
-    color: rgba(255, 255, 255, 0.7);
-    padding: 12px 20px;
-    border-radius: 12px;
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+.nav-link-custom {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-  .nav-link-custom:hover, .nav-link-custom.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    transform: translateX(5px);
-  }
+.nav-link-custom:hover, .nav-link-custom.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateX(5px);
+}
 
-  .finance-card {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s;
-    border-radius: 20px;
-  }
+.finance-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s;
+  border-radius: 20px;
+}
 
-  .finance-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.12);
-  }
+.finance-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.12);
+}
 
-  .metric-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.5);
-  }
+.metric-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.5);
+}
 
-  .chart-placeholder {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 25px;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.chart-placeholder {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 25px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

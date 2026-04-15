@@ -11,17 +11,10 @@ export class Finances {
 
   constructor(private http : HttpClient){}
 
-  creditTransaction(transaction: TransactionDTO){
-    return this.http.post<TransactionDTO>(this.transactionURL + "/credit", transaction).subscribe({
-      complete: () => alert("Value " + transaction.value + " Credited succesfully"),
-      error: (err) => alert("Credit in value " + transaction.value + " failed" + err)
-    })
-  }
-  debitTransaction(transaction: TransactionDTO){
-    return this.http.post<TransactionDTO>(this.transactionURL + "/debit", transaction).subscribe({
-      complete: () => alert("Value " + transaction.value + " Debited succesfully"),
-      error: (err) => alert("Debit in value " + transaction.value + " failed" +  err),
-
+  addNewTransaction(transaction: TransactionDTO){
+    return this.http.post<TransactionDTO>(this.transactionURL + "/transaction", transaction).subscribe({
+      complete: () => console.log("Transaction successfuly"),
+      error: (err) => console.log("Transaction failed")
     })
   }
 }

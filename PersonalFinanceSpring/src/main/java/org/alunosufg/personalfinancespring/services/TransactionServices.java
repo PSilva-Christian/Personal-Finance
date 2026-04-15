@@ -24,15 +24,10 @@ public class TransactionServices {
         this.userAuthRepository = userAuthRepository;
     }
 
-    public String saveTransaction(@Valid @NotNull UserTransactionDTO transactionDTO, String creditOrDebit){
+    public String saveTransaction(@Valid @NotNull UserTransactionDTO transactionDTO){
         Transaction transaction = new Transaction();
 
-        if (creditOrDebit.equalsIgnoreCase("Debit"))
-            transaction.setValue(negativeNumber(transactionDTO.value()));
-
-        else
-            transaction.setValue(transactionDTO.value());
-
+        transaction.setValue(transactionDTO.value());
         transaction.setUserId(userAuthRepository.findIdByEmail(transactionDTO.email()));
         transaction.setCategory(transactionDTO.category());
         transaction.setDescription(transactionDTO.description());
@@ -45,10 +40,6 @@ public class TransactionServices {
     public List<Transaction> getTransactions(@Valid @NotNull UserGenericDTO user){
         return transactionRepository.getAllByUserId(userAuthRepository.findIdByEmail(user.email()));
 
-    }
-
-    private Integer negativeNumber(Integer num){
-        return num * -1;
     }
 
     private String getTime(){

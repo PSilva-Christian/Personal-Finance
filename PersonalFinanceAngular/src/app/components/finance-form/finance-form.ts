@@ -21,32 +21,36 @@ export class FinanceForm {
     value: new FormControl( 0, [Validators.required, Validators.nullValidator, Validators.min(1)]),
     category: new FormControl('', [Validators.required, Validators.nullValidator]),
     type: new FormControl('expense', Validators.required)
-    /*,
-    date: new FormControl('', [Validators.required, Validators.nullValidator])*/
     }
   )
-  addTransaction() {
+
+  public addTransaction() {
 
     const financeAdd = this.financeForm.value as TransactionDTO;
     financeAdd.email = sessionStorage.getItem('email') ?? '';
     financeAdd.value = financeAdd.value * 100;
 
+    if (this.financeForm.value.type === 'expense')
+      financeAdd.value *= -1;
+
+    this.financeForm.reset();
+
     this.financeForm.setValue({
-         description: '',
-         value: 0,
-         category: '',
-         type: 'expense'/*,
-         date: ''*/
+            description: '',
+            value: 0,
+            category: '',
+            type: 'expense'
     });
 
+    return this.transaction.addNewTransaction(financeAdd);
 
   }
 
-  setTransactionType(type: 'income' | 'expense') {
+  public setTransactionType(type: 'income' | 'expense') {
       this.financeForm.patchValue({ type: type });
     }
 
-    backToDashboard(){
+   public backToDashboard(){
     this.router.navigate(['/dashboard'])
     }
 }

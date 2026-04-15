@@ -19,22 +19,13 @@ public class FinanceController {
         this.transactionService = transactionServices;
     }
 
-    @PostMapping("/credit")
-    public String creditValue(@Valid @RequestBody UserTransactionDTO creditTransaction) {
+    @PostMapping("/transaction")
+    public String saveNewTransaction(@Valid @RequestBody UserTransactionDTO creditTransaction) {
 
         if (creditTransaction == null)
             return null;
 
-        return transactionService.saveTransaction(creditTransaction, "Credit");
-    }
-
-    @PostMapping("/debit")
-    public String debitValue(@Valid @RequestBody UserTransactionDTO debitTransaction) {
-
-        if(debitTransaction == null)
-            return null;
-
-        return transactionService.saveTransaction(debitTransaction, "Debit");
+        return transactionService.saveTransaction(creditTransaction);
     }
 
     @GetMapping("/transactions")
