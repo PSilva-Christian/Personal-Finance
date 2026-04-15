@@ -1,6 +1,7 @@
 package org.alunosufg.personalfinancespring.controller;
 
 import jakarta.validation.Valid;
+import org.alunosufg.personalfinancespring.dto.auth.ChangePasswordDTO;
 import org.alunosufg.personalfinancespring.dto.auth.LoginAuthDTO;
 import org.alunosufg.personalfinancespring.dto.auth.RegisterRequestDTO;
 import org.alunosufg.personalfinancespring.dto.auth.ResponseDTO;
@@ -16,14 +17,14 @@ public class UserAuthController {
 
     private final UserAuthService userAuthService;
 
-    public UserAuthController(UserAuthService userAuthService ){
+    public UserAuthController(UserAuthService userAuthService) {
         this.userAuthService = userAuthService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> register(@Valid @RequestBody RegisterRequestDTO body)  {
+    public ResponseEntity<ResponseDTO> register(@Valid @RequestBody RegisterRequestDTO body) {
 
-        if ( body == null)
+        if (body == null)
             return userAuthService.wrongAuthCredentials("null");
 
         if (!userAuthService.existingUserInDatabase(body))
@@ -36,7 +37,7 @@ public class UserAuthController {
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginAuthDTO body) {
 
-        if ( body == null)
+        if (body == null)
             return userAuthService.wrongAuthCredentials("null");
 
         UserEntity userLog = userAuthService.loginUser(body);
@@ -47,4 +48,15 @@ public class UserAuthController {
         return userAuthService.authUserResponse(userLog);
     }
 
+    @PostMapping("/changepassword")
+    public String changePassword(@Valid @RequestBody ChangePasswordDTO body) {
+        if (body == null)
+            return null;
+
+        if (userAuthService.changePassword(body))
+            return "ok";
+
+        return "nada";
+
+    }
 }

@@ -1,40 +1,49 @@
+<h1 class="text-center fw-bold display-4 text-white opacity-75">Welcome Back</h1>
 
-<h1 class="container text-center mt-3 fw-bold fs-1 opacity-70">Welcome Back</h1>
-<form [formGroup]="LoginForm" (submit)="loginUser()" class="container rounded rounded-5 mt-4 col-6 shadow-lg opacity-75 border-2">
-    <div class="text-center">
+<div class="container d-flex justify-content-center">
+    <form [formGroup]="LoginForm" (submit)="loginUser()"
+          class="glass-card py-4 mx-5  rounded-5 col-11 col-md-8 col-lg-5 shadow-lg border-2 text-light">
 
-        <h2 class="container text-light fw-bold pt-4 fs-2">Sign-in</h2>
+        <div class="text-center">
+            <h2 class="fw-bold mb-4">Sign-in</h2>
 
-        <div class="container pt-3 text-start">
-            <div class="ps-5 pe-5 me-5 ms-5">
-                <label for="email" class="form-label text-light pb-1 ps-1">E-mail</label>
-                <input formControlName="email" id="email" type="email" class="form-control opacity-75 p-3 rounded-4" placeholder="Enter email">
+            <div class="mb-3 text-start px-md-4">
+                <label for="email" class="form-label fw-semibold ps-1">E-mail</label>
+                <input formControlName="email" id="email" type="email"
+                       class="form-control bg-white border-0 p-3 rounded-4 shadow-sm"
+                       placeholder="name@example.com">
                 @if (LoginForm.get('email')?.invalid && LoginForm.get('email')?.touched) {
-                  <small class="alertInputs">• E-mail must be valid</small>
+                  <small class="alertInputs animate__animated animate__fadeIn">
+                    <i class="bi bi-exclamation-circle me-1"></i>E-mail must be valid
+                  </small>
                 }
             </div>
-        </div>
 
-        <div class="container pt-3 text-start">
-            <div class="ps-5 pe-5 me-5 ms-5">
-                <label for="password" class="form-label text-light pb-1 ps-1">Password</label>
-                <input formControlName="password" id="password" type="password" class="form-control opacity-75 p-3 rounded-4" placeholder="Enter password" required>
+            <div class="mb-4 text-start px-md-4">
+                <label for="password" class="form-label fw-semibold ps-1">Password</label>
+                <input formControlName="password" id="password" type="password"
+                       class="form-control bg-white border-0 p-3 rounded-4 shadow-sm"
+                       placeholder="Enter password">
                 @if (LoginForm.get('password')?.invalid && LoginForm.get('password')?.touched) {
-                  <small class="alertInputs">• Password must be 8-12 characters.</small>
+                  <small class="alertInputs animate__animated animate__fadeIn">
+                    <i class="bi bi-exclamation-circle me-1"></i>8-12 characters required
+                  </small>
                 }
             </div>
+
+            <div class="px-md-4 mt-4">
+                <button [disabled]="!LoginForm.valid"
+                        class="w-100 btn btn-light btn-lg rounded-4 fw-bold shadow-sm py-3 transition-all">
+                    Sign-in
+                </button>
+
+                <div class="divider fw-bold uppercase px-4"><span>or</span></div>
+
+                <a routerLink="/signup"
+                   class="w-100 btn btn-outline-light btn-lg rounded-4 fw-bold py-3">
+                    Create Account
+                </a>
+            </div>
         </div>
-
-        <div class="container pt-3">
-            <button [disabled]="!LoginForm.valid" class="col-6 border-2 btn btn-lg rounded-4 mt-4 opacity-75 fw-bolder shadow-lg text-light">Sign-in</button>
-
-            <div class="divider fw-bolder"><span>or</span></div>
-
-            <a routerLink="/signup" class="col-6 border-2 btn btn-lg rounded-4 mt-2 mb-4 opacity-75 fw-bolder shadow-lg text-light">Sign-up</a>
-
-        </div>
-
-
-    </div>
-
-</form>
+    </form>
+</div>

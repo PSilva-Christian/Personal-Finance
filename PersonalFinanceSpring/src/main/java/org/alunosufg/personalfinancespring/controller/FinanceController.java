@@ -21,19 +21,26 @@ public class FinanceController {
 
     @PostMapping("/credit")
     public String creditValue(@Valid @RequestBody UserTransactionDTO creditTransaction) {
-        return transactionService.saveTransaction(creditTransaction, "Credit");
 
+        if (creditTransaction == null)
+            return null;
+
+        return transactionService.saveTransaction(creditTransaction, "Credit");
     }
 
     @PostMapping("/debit")
-    public String debitValue(@Valid @RequestBody UserTransactionDTO creditTransaction) {
+    public String debitValue(@Valid @RequestBody UserTransactionDTO debitTransaction) {
 
-        return transactionService.saveTransaction(creditTransaction, "Debit");
+        if(debitTransaction == null)
+            return null;
 
+        return transactionService.saveTransaction(debitTransaction, "Debit");
     }
 
     @GetMapping("/transactions")
     public List<Transaction> getTransaction(@Valid @RequestBody UserGenericDTO user) {
         return transactionService.getTransactions(user);
+
     }
+
 }

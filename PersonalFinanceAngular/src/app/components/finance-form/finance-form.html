@@ -1,47 +1,82 @@
-<div class="container mt-5">
+<div class="container mt-3">
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white ">
-          <h5 class="mb-0 opacity-75">New expense</h5>
-        </div>
+    <div class="col-11 col-md-8 col-lg-6">
 
-        <div class="card-body">
-          <form [formGroup]="financeForm" (ngSubmit)="adicionarGasto()">
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <input type="text" class="form-control" name="description" formControlName="description" placeholder="Ex: Meal in shopping">
+      <h2 class="text-center text-white mb-4 opacity-75 fw-bold">New Transaction</h2>
+
+      <div class="glass-card shadow-lg overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+          <form [formGroup]="financeForm" (ngSubmit)="addTransaction()">
+
+            <div class="mb-4">
+              <label class="form-label d-block text-center mb-3">Transaction Type</label>
+              <div class="transaction-type-selector">
+
+                <div class="type-option type-income"
+                    [class.active]="financeForm.get('type')?.value === 'income'"
+                    (click)="setTransactionType('income')">
+                  <i class="bi bi-graph-up-arrow me-2"></i>Income
+                </div>
+
+                <div class="type-option type-expense"
+                    [class.active]="financeForm.get('type')?.value === 'expense'"
+                    (click)="setTransactionType('expense')">
+                  <i class="bi bi-graph-down-arrow me-2"></i>Expense
+                </div>
+
+              </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Value (R$)</label>
-                <input type="number" class="form-control" name="value" formControlName="value">
+            <div class="mb-4">
+              <label class="form-label">Description</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-0 rounded-start-4"><i class="bi bi-pencil-square text-secondary"></i></span>
+                <input type="text" class="form-control rounded-end-4" formControlName="description" placeholder="Ex: Salary or Rent">
               </div>
-              <div class="col-md-6 mb-3">
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6 mb-4">
+                <label class="form-label">Value (R$)</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-0 rounded-start-4 fw-bold text-secondary">R$</span>
+                  <input type="number" class="form-control rounded-end-4" formControlName="value" placeholder="0.00">
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-4">
                 <label class="form-label">Category</label>
-                <select class="form-select" name="category" formControlName="category">
+                <select class="form-select rounded-4" formControlName="category">
                   <option value="" disabled selected>Select...</option>
-
-                    @for (cat of categories; track cat){
-                      <option>{{cat}}
-                      </option>
-                    }
-
+                  @for (cat of categories; track cat){
+                    <option [value]="cat">{{cat}}</option>
+                  }
                 </select>
               </div>
             </div>
-            @if (financeForm.get('value')?.value == null || (financeForm.touched && financeForm.get('value')?.value == 0)) {
-                  <small class="text-danger">Value cannot be 0 or have <span class="fw-bold text-dark h5">, </span>, use instead <span class="fw-bold h5 text-dark">.</span></small>
-                }
 
-            <button type="submit" class="btn btn-outline-dark btn-light btn-success w-100 mt-2">
-              <i class="bi bi-plus-circle"></i> Add Transaction
+            @if (financeForm.get('value')?.invalid && financeForm.get('value')?.touched) {
+              <div class="alert-box mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Use dots (<b>.</b>) for decimals.
+              </div>
+            }
+
+            <button [disabled]="financeForm.invalid" type="submit"
+                    class="w-100 btn btn-lg btn-add text-white fw-bold shadow py-3 transition-all">
+              <i class="bi bi-check-circle me-2"></i> Confirm Transaction
             </button>
           </form>
-        </div>
-      </div>
 
+          <div class="text-center mt-4">
+            <a (click)="backToDashboard()" class="btn-return">
+              <i class="bi bi-arrow-left"></i> Return to Dashboard
+            </a>
+          </div>
+
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

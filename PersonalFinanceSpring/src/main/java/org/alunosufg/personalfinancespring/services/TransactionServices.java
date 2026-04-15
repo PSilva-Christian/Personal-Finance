@@ -7,7 +7,6 @@ import org.alunosufg.personalfinancespring.dto.UserTransactionDTO;
 import org.alunosufg.personalfinancespring.entities.Transaction;
 import org.alunosufg.personalfinancespring.repository.TransactionRepository;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,8 +19,7 @@ public class TransactionServices {
     private final TransactionRepository transactionRepository;
     private final UserAuthRepository userAuthRepository;
 
-    public TransactionServices(TransactionRepository transactionRepository,
-                               UserAuthRepository userAuthRepository) {
+    public TransactionServices(TransactionRepository transactionRepository, UserAuthRepository userAuthRepository) {
         this.transactionRepository = transactionRepository;
         this.userAuthRepository = userAuthRepository;
     }
@@ -32,16 +30,19 @@ public class TransactionServices {
         if (creditOrDebit.equalsIgnoreCase("Debit"))
             transaction.setValue(negativeNumber(transactionDTO.value()));
 
-        transaction.setValue(transactionDTO.value());
+        else
+            transaction.setValue(transactionDTO.value());
+
         transaction.setUserId(userAuthRepository.findIdByEmail(transactionDTO.email()));
         transaction.setCategory(transactionDTO.category());
         transaction.setDescription(transactionDTO.description());
         transaction.setTransactionTime(getTime());
+
         transactionRepository.save(transaction);
         return "Ok";
     }
 
-    public List<Transaction> getTransactions(@NonNull UserGenericDTO user){
+    public List<Transaction> getTransactions(@Valid @NotNull UserGenericDTO user){
         return transactionRepository.getAllByUserId(userAuthRepository.findIdByEmail(user.email()));
 
     }

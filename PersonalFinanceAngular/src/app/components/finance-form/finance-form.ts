@@ -1,6 +1,7 @@
 import { Finances } from './../../services/finances';
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormControlName } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-finance-form',
@@ -11,44 +12,41 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormControlNam
 
 export class FinanceForm {
 
-  constructor(private transaction : Finances){}
-
-
+  constructor(private transaction : Finances, private router : Router){}
 
   categories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
 
-
   financeForm = new FormGroup ({
     description: new FormControl(''),
-    value: new FormControl( 0, [Validators.required, Validators.nullValidator]),
-    category: new FormControl('', [Validators.required, Validators.nullValidator])/*,
+    value: new FormControl( 0, [Validators.required, Validators.nullValidator, Validators.min(1)]),
+    category: new FormControl('', [Validators.required, Validators.nullValidator]),
+    type: new FormControl('expense', Validators.required)
+    /*,
     date: new FormControl('', [Validators.required, Validators.nullValidator])*/
     }
   )
-
-  adicionarGasto() {
+  addTransaction() {
 
     const financeAdd = this.financeForm.value as TransactionDTO;
     financeAdd.email = sessionStorage.getItem('email') ?? '';
     financeAdd.value = financeAdd.value * 100;
 
-    if(financeAdd.value > 0){
-      return this.transaction.creditTransaction(financeAdd);
-    }
-    else if(financeAdd.value < 0) {
-      return this.transaction.debitTransaction(financeAdd);
-    }
-    else{
-      return null;
-    }
-
-
-      this.financeForm.setValue({
+    this.financeForm.setValue({
          description: '',
          value: 0,
-         category: ''/*,
+         category: '',
+         type: 'expense'/*,
          date: ''*/
-      });
+    });
+
+
   }
 
+  setTransactionType(type: 'income' | 'expense') {
+      this.financeForm.patchValue({ type: type });
+    }
+
+    backToDashboard(){
+    this.router.navigate(['/dashboard'])
+    }
 }

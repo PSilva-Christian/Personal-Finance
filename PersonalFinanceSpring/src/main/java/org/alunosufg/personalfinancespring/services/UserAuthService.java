@@ -1,5 +1,6 @@
 package org.alunosufg.personalfinancespring.services;
 
+import org.alunosufg.personalfinancespring.dto.auth.ChangePasswordDTO;
 import org.alunosufg.personalfinancespring.dto.auth.LoginAuthDTO;
 import org.alunosufg.personalfinancespring.dto.auth.RegisterRequestDTO;
 import org.alunosufg.personalfinancespring.dto.auth.ResponseDTO;
@@ -76,9 +77,23 @@ public class UserAuthService {
 
     }
 
-    public String getDay(){
+    private String getDay(){
         LocalDateTime localTime = LocalDateTime.now();
         return localTime.format(DateTimeFormatter.ISO_DATE);
+    }
+
+    public boolean changePassword(ChangePasswordDTO body){
+        UserEntity user = userAuthRepository.findByEmail(body.email()).orElse(null);
+        if (user == null || body.password().equals(body.newPassword()))
+            return false;
+
+        if (passwordEncoder.matches(body.password(), user.getPassword())){
+            userAuthRepository.changeUserPassword(user.getId(), passwordEncoder.encode(body.newPassword()));
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }
