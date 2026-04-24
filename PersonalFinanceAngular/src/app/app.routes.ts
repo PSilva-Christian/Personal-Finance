@@ -4,6 +4,7 @@ import { SignupPage } from './components/signup-page/signup-page';
 import { DashboardPage } from './components/dashboard-page/dashboard-page';
 import { routeGuard } from './security/auth-security/route-guard-guard';
 import { FinanceForm } from './components/finance-form/finance-form';
+import { ProfilePage } from './components/profile-page/profile-page/profile-page';
 
 export const routes: Routes = [
     {
@@ -22,6 +23,11 @@ export const routes: Routes = [
     {
       path: 'finances',
       component: FinanceForm,
+      canActivate:[routeGuard]
+    },
+    {
+      path: 'profile',
+      component: ProfilePage,
       canActivate:[routeGuard]
     },
     {

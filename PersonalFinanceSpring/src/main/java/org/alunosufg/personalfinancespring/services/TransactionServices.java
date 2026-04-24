@@ -2,6 +2,7 @@ package org.alunosufg.personalfinancespring.services;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.alunosufg.personalfinancespring.dto.TransactionDTO;
 import org.alunosufg.personalfinancespring.dto.UserGenericDTO;
 import org.alunosufg.personalfinancespring.dto.UserTransactionDTO;
 import org.alunosufg.personalfinancespring.entities.Transaction;
@@ -37,8 +38,13 @@ public class TransactionServices {
         return "Ok";
     }
 
-    public List<Transaction> getTransactions(@Valid @NotNull UserGenericDTO user){
+    public List<TransactionDTO> getAllTransactions(@Valid @NotNull UserGenericDTO user){
         return transactionRepository.getAllByUserId(userAuthRepository.findIdByEmail(user.email()));
+
+    }
+
+    public List<TransactionDTO> getLastQtdTransactions(@Valid @NotNull UserGenericDTO user, @Valid Integer qtd){
+        return transactionRepository.getLastQtdByUserId(userAuthRepository.findIdByEmail(user.email()), qtd);
 
     }
 

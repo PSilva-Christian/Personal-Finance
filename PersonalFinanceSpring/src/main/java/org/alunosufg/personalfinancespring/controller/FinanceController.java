@@ -1,8 +1,8 @@
 package org.alunosufg.personalfinancespring.controller;
 import jakarta.validation.Valid;
+import org.alunosufg.personalfinancespring.dto.TransactionDTO;
 import org.alunosufg.personalfinancespring.dto.UserGenericDTO;
 import org.alunosufg.personalfinancespring.dto.UserTransactionDTO;
-import org.alunosufg.personalfinancespring.entities.Transaction;
 import org.alunosufg.personalfinancespring.services.TransactionServices;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,18 +20,23 @@ public class FinanceController {
     }
 
     @PostMapping("/transaction")
-    public String saveNewTransaction(@Valid @RequestBody UserTransactionDTO creditTransaction) {
+    public String saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction) {
 
-        if (creditTransaction == null)
+        if (newTransaction == null)
             return null;
 
-        return transactionService.saveTransaction(creditTransaction);
+        return transactionService.saveTransaction(newTransaction);
     }
 
     @GetMapping("/transactions")
-    public List<Transaction> getTransaction(@Valid @RequestBody UserGenericDTO user) {
-        return transactionService.getTransactions(user);
+    public List<TransactionDTO> getTransaction(@Valid @RequestBody UserGenericDTO user) {
+        return transactionService.getAllTransactions(user);
 
+    }
+
+    @PostMapping("/transactions/{qtd}")
+    public List<TransactionDTO> lastTransactions(@Valid @RequestBody UserGenericDTO user, @PathVariable Integer qtd){
+        return transactionService.getLastQtdTransactions(user, qtd);
     }
 
 }

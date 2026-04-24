@@ -1,18 +1,26 @@
 import { Finances } from './../../services/finances';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { getLastTransactionDTO } from '../../models/transactions-dto/getTransactionDTO';
+import { UserGenericDTO } from '../../models/user-generic-dto';
+import { GeneralServices } from '../../services/general-service/general-services';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-finance-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CurrencyPipe],
   templateUrl: './finance-form.html',
   styleUrls: ['./finance-form.css']
 })
 
-export class FinanceForm {
+export class FinanceForm implements OnInit{
 
-  constructor(private transaction : Finances, private router : Router){}
+  constructor(private transaction : Finances,
+     private router : Router,
+     private cdr: ChangeDetectorRef,
+     private generalS: GeneralServices
+    ){}
 
   categories = ['Food', 'Transport', 'Leisure', 'Health', 'Housing', 'Others'];
 
@@ -24,7 +32,16 @@ export class FinanceForm {
     }
   )
 
-  public addTransaction() {
+  qtdTransactionsMenu = 3;
+
+  ngOnInit(){
+    this.getLastTransactions(this.qtdTransactionsMenu);
+  }
+
+  transactionsDisplayed? : getLastTransactionDTO[];
+
+
+  public addTransaction(){
 
     const financeAdd = this.financeForm.value as TransactionDTO;
     financeAdd.email = sessionStorage.getItem('email') ?? '';
@@ -42,6 +59,8 @@ export class FinanceForm {
             type: 'expense'
     });
 
+    this.getLastTransactions(this.qtdTransactionsMenu);
+
     return this.transaction.addNewTransaction(financeAdd);
 
   }
@@ -52,5 +71,30 @@ export class FinanceForm {
 
    public backToDashboard(){
     this.router.navigate(['/dashboard'])
-    }
+  }
+
+  public profilePage(){
+    this.router.navigate(['profile']);
+  }
+
+  public getLastTransactions(qtd: number){
+    const user: UserGenericDTO = ({
+      email: sessionStorage.getItem('email') ?? '',
+      username: sessionStorage.getItem('username') ?? '',
+
+      }
+    )
+    this.transaction.getLastTransactionsByQtd(qtd, user).subscribe({
+      next: (nxt) => {this.transactionsDisplayed = nxt,
+            this.cdr.detectChanges();
+
+      },
+      error: (err) => console.log("Error while getting trasactions", err)
+    });
+  }
+
+  public logoutUser(){
+    return this.generalS.logoutUser();
+  }
+
 }

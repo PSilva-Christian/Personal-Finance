@@ -53,10 +53,8 @@ public class UserAuthController {
         if (body == null)
             return null;
 
-        if (userAuthService.changePassword(body))
-            return "ok";
 
-        return "nada";
+        return userAuthService.changePassword(body) ? "ok"  : null;
 
     }
 }

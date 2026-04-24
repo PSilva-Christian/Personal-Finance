@@ -4,20 +4,20 @@
     <aside class="sidebar col-auto d-flex flex-column p-4">
       <div class="text-center mb-5 px-5">
         <img class="rounded-circle border border-3 border-opacity-25 border-light shadow"
-             src="https://cdn-icons-png.flaticon.com/512/9308/9308008.png"
+             src="./../../../../..//public/icons/profile_icon.png"
              alt="Profile" width="80">
         <h6 class="text-light mt-3 opacity-75">Admin Account</h6>
       </div>
 
       <nav class="nav flex-column fw-bold">
-        <a class="nav-link-custom" href="#"><i class="bi bi-person"></i> Profile</a>
+        <a class="nav-link-custom" (click)="profilePage()"><i class="bi bi-person"></i> Profile</a>
         <a class="nav-link-custom" (click)="backToDashboard()"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a class="nav-link-custom active"><i class="bi bi-arrow-repeat"></i> Update</a>
-        <a class="nav-link-custom" href="#"><i class="bi bi-gear"></i> Settings</a>
+        <a class="nav-link-custom active"><i class="bi-list-columns-reverse"></i> Transactions</a>
+        <a class="nav-link-custom"><i class="bi bi-gear"></i> Settings</a>
 
         <div class="mt-auto">
           <hr class="text-light opacity-25">
-          <a class="nav-link-custom text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
+          <a class="nav-link-custom text-danger" (click)="logoutUser()"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
       </nav>
     </aside>
@@ -25,7 +25,7 @@
     <div class="col-11 col-md-8 col-lg-6 p-4">
 
       <h2 class="text-center text-white mb-4 opacity-75 fw-bold">New Transaction</h2>
-      <main class="glass-card shadow-lg overflow-hidden">
+      <main class="glass-card dark-placeholder shadow-lg overflow-hidden">
         <div class="card-body p-4 p-md-5">
           <form [formGroup]="financeForm" (ngSubmit)="addTransaction()">
 
@@ -94,21 +94,25 @@
 
     <div class="col-11 col-md-3 col-lg-3 mx-4 my-3 transaction-div px-3 py-3">
       <h2 class="fw-bold text-light opacity-75 mb-3 text-center">Last transactions</h2>
-      <div class="container transaction-unit expense-unit mb-2 text-light fw-bold opacity-75 p-4 h4">
-        Value: <strong class="h5 mb-1">R$ 40,50</strong><br class="mb-1">
-        Type: <strong class="h5">Expense</strong><br class="mb-1">
-        Date: <strong class="h5">14/04/26 - 22:00</strong>
-      </div>
-      <div class="container transaction-unit expense-unit my-2 text-light fw-bold opacity-75 p-4 h4">
-        Value: <strong class="h5 mb-1">R$ 40,50</strong><br class="mb-1">
-        Type: <strong class="h5">Expense</strong><br class="mb-1">
-        Date: <strong class="h5">14/04/26 - 22:00</strong>
-      </div>
-      <div class="container transaction-unit income-unit mt-2 text-light fw-bold opacity-75 p-4 h4">
-        Value: <strong class="h5 mb-1">R$ 40,50</strong><br class="mb-1">
-        Type: <strong class="h5">Income</strong><br class="mb-1">
-        Date: <strong class="h5">14/04/26 - 22:00</strong>
-      </div>
+
+      @for (trans of transactionsDisplayed; track trans.value) {
+
+        @if (trans.value < 0) {
+          <div class="container transaction-unit expense-unit mb-2 text-light fw-bold opacity-75 p-4 h4">
+            Value: <strong class="h5 mb-1">{{(trans.value / 100 * -1 || 0) | currency:'BRL'}}</strong><br class="mb-1">
+            Type: <strong class="h5">Expense</strong><br class="mb-1">
+            Date: <strong class="h5"><span>{{trans.date.substring(0, 10)}}</span></strong>
+          </div>
+        }
+
+        @else{
+          <div class="container transaction-unit income-unit mt-2 text-light fw-bold opacity-75 p-4 h4">
+            Value: <strong class="h5 mb-1">{{(trans.value / 100 || 0) | currency:'BRL'}}</strong><br class="mb-1">
+            Type: <strong class="h5">Income</strong><br class="mb-1">
+            Date: <strong class="h5"><span>{{trans.date.substring(0, 10)}}</span></strong>
+          </div>
+        }
+      }
 
     </div>
 
