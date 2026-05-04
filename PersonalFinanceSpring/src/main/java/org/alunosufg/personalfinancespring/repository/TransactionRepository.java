@@ -1,6 +1,6 @@
 package org.alunosufg.personalfinancespring.repository;
 
-import org.alunosufg.personalfinancespring.dto.TransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.TransactionDTO;
 import org.alunosufg.personalfinancespring.entities.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

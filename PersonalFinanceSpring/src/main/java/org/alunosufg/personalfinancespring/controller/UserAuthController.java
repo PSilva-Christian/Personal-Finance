@@ -6,56 +6,43 @@ import org.alunosufg.personalfinancespring.dto.auth.LoginAuthDTO;
 import org.alunosufg.personalfinancespring.dto.auth.RegisterRequestDTO;
 import org.alunosufg.personalfinancespring.dto.auth.ResponseDTO;
 import org.alunosufg.personalfinancespring.entities.UserEntity;
+import org.alunosufg.personalfinancespring.security.TokenService;
 import org.alunosufg.personalfinancespring.services.UserAuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController()
-@RequestMapping("/auth")
+@RestController
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserAuthController {
 
     private final UserAuthService userAuthService;
+    private final TokenService tokenService;
 
-    public UserAuthController(UserAuthService userAuthService) {
+    public UserAuthController(UserAuthService userAuthService, TokenService tokenService) {
         this.userAuthService = userAuthService;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> register(@Valid @RequestBody RegisterRequestDTO body) {
 
-        if (body == null)
-            return userAuthService.wrongAuthCredentials("null");
-
-        if (userAuthService.existingUserInDatabase(body)) {
-            System.out.println("Credentials already used");
-            return userAuthService.credentialsAlreadyUsed(body);
-        }
-
         UserEntity newUser = userAuthService.registerUser(body);
-        return userAuthService.authUserResponse(newUser);
+        return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), newUser.getEmail(), tokenService.generateToken(newUser.getEmail())));
+
     }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginAuthDTO body) {
 
-        if (body == null)
-            return userAuthService.wrongAuthCredentials("null");
-
-        UserEntity userLog = userAuthService.loginUser(body);
-
-        if (userLog == null)
-            return userAuthService.wrongAuthCredentials("Not found");
-
-        return userAuthService.authUserResponse(userLog);
+        ResponseDTO response = userAuthService.loginUser(body);
+        return ResponseEntity.ok(new ResponseDTO(response.username(), response.email(), tokenService.generateToken(response.email())));
     }
 
-    @PostMapping("/changepassword")
-    public String changePassword(@Valid @RequestBody ChangePasswordDTO body) {
-        if (body == null)
-            return null;
+    @PostMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordDTO body) {
 
-        return userAuthService.changePassword(body) ? "ok"  : null;
-
+        userAuthService.changePassword(body);
+        return ResponseEntity.noContent().build();
     }
 }

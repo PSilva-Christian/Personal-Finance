@@ -1,15 +1,16 @@
 package org.alunosufg.personalfinancespring.controller;
-import jakarta.validation.Valid;
-import org.alunosufg.personalfinancespring.dto.TransactionDTO;
-import org.alunosufg.personalfinancespring.dto.UserGenericDTO;
-import org.alunosufg.personalfinancespring.dto.UserTransactionDTO;
-import org.alunosufg.personalfinancespring.services.TransactionServices;
-import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import org.alunosufg.personalfinancespring.dto.transactions.TransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.UserTransactionDTO;
+import org.alunosufg.personalfinancespring.services.TransactionServices;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/finance")
 @CrossOrigin(origins = "http://localhost:4200")
 public class FinanceController {
 
@@ -19,24 +20,34 @@ public class FinanceController {
         this.transactionService = transactionServices;
     }
 
-    @PostMapping("/transaction")
-    public String saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction) {
-
-        if (newTransaction == null)
-            return null;
-
-        return transactionService.saveTransaction(newTransaction);
+    @PostMapping("/transactions")
+    public ResponseEntity<String> saveNewTransaction(@Valid @RequestBody UserTransactionDTO newTransaction) {
+        String result = transactionService.saveTransaction(newTransaction);
+        System.out.println("--- Saving new transaction");
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/transactions")
-    public List<TransactionDTO> getTransaction(@Valid @RequestBody UserGenericDTO user) {
-        return transactionService.getAllTransactions(user);
-
+    public ResponseEntity<List<TransactionDTO>> getTransactions(@RequestParam String email) {
+        System.out.println("--- Getting all transactions");
+        List<TransactionDTO> transactions = transactionService.getAllTransactions(email);
+        return ResponseEntity.ok(transactions);
     }
 
-    @PostMapping("/transactions/{qtd}")
-    public List<TransactionDTO> lastTransactions(@Valid @RequestBody UserGenericDTO user, @PathVariable Integer qtd){
-        return transactionService.getLastQtdTransactions(user, qtd);
+    @GetMapping("/transactions/last/{qtd}")
+    public ResponseEntity<List<TransactionDTO>> lastTransactions(
+            @RequestParam String email,
+            @PathVariable Integer qtd) {
+
+        if (email == null || email.isEmpty()) {
+            System.out.println("--- Email is null");
+            throw new RuntimeException("Email null");
+        }
+
+        List<TransactionDTO> transactions = transactionService.getLastQtdTransactions(email, qtd);
+        System.out.println("--- Fetching last " + qtd + " transactions for: " + email);
+
+        return ResponseEntity.ok(transactions);
     }
 
 }

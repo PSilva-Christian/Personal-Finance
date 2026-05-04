@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormControlName, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ChangePasswordDTO } from '../../../models/auth-dto/change-password-dto';
-import { AsideComponent } from "../../aside-component/aside-component/aside-component";
-import { AuthUser } from '../../../services/auth-user/auth-user';
+import { ChangePasswordDTO } from '../../models/auth-dto/change-password-dto';
+import { AsideComponent } from "../aside-component/aside-component/aside-component";
+import { AuthUser } from '../../services/auth-user/auth-user';
 
 @Component({
   selector: 'app-profile-page',

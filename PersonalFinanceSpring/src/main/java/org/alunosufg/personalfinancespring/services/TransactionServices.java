@@ -1,17 +1,15 @@
 package org.alunosufg.personalfinancespring.services;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.alunosufg.personalfinancespring.dto.TransactionDTO;
-import org.alunosufg.personalfinancespring.dto.UserGenericDTO;
-import org.alunosufg.personalfinancespring.dto.UserTransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.TransactionDTO;
+import org.alunosufg.personalfinancespring.dto.transactions.UserTransactionDTO;
 import org.alunosufg.personalfinancespring.entities.TransactionEntity;
 import org.alunosufg.personalfinancespring.repository.AccountRepository;
 import org.alunosufg.personalfinancespring.repository.TransactionRepository;
 import org.alunosufg.personalfinancespring.repository.UserAuthRepository;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
 
@@ -29,26 +27,37 @@ public class TransactionServices {
         this.accountRepository = accountRepository;
     }
 
-    public String saveTransaction(@Valid @NotNull UserTransactionDTO transactionDTO){
-        TransactionEntity transactionEntity = new TransactionEntity();
+    @Transactional
+    public String saveTransaction(@Valid @NotNull UserTransactionDTO dto) {
+        var account = accountRepository.getAccount(dto.email())
+                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        transactionEntity.setValue(transactionDTO.value());
-        transactionEntity.setAccount(accountRepository.getAccount(transactionDTO.email()).orElse(null));
-        transactionEntity.setCategory(transactionDTO.category());
-        transactionEntity.setDescription(transactionDTO.description());
-        transactionEntity.setTransactionTime(Date.from(Instant.now()));
+        System.out.println("--- Saving new transactions");
+        TransactionEntity entity = new TransactionEntity();
+        entity.setValue(dto.value());
+        entity.setAccount(account);
+        entity.setCategory(dto.category());
+        entity.setDescription(dto.description());
 
-        transactionRepository.save(transactionEntity);
-        return "Ok";
+        entity.setTransactionTime(java.sql.Date.from(Instant.now()));
+
+        transactionRepository.save(entity);
+        return "Transaction saved successfully";
     }
 
-    public List<TransactionDTO> getAllTransactions(@Valid @NotNull UserGenericDTO user){
-        return transactionRepository.getAllByUserId(userAuthRepository.findIdByEmail(user.email()));
-
+    public List<TransactionDTO> getAllTransactions(@Valid @NotNull String user) {
+        System.out.println("--- Getting all transactions");
+        Long userId = userAuthRepository.findIdByEmail(user);
+        if (userId == null) {
+            throw new RuntimeException("User not found");
+        }
+        return transactionRepository.getAllByUserId(userId);
     }
 
-    public List<TransactionDTO> getLastQtdTransactions(@Valid @NotNull UserGenericDTO user, @Valid Integer qtd){
-        return transactionRepository.getLastQtdByUserId(userAuthRepository.findIdByEmail(user.email()), qtd);
+
+    public List<TransactionDTO> getLastQtdTransactions(@Valid @NotNull String user, @Valid Integer qtd){
+        System.out.printf("--- Getting last %d transactions\n", qtd);
+        return transactionRepository.getLastQtdByUserId(userAuthRepository.findIdByEmail(user), qtd);
 
     }
 

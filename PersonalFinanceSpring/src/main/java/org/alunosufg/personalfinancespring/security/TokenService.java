@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.alunosufg.personalfinancespring.entities.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
@@ -15,12 +14,14 @@ public class TokenService {
     @Value("${token.secret.key}")
     private String secret;
     
-    public String generateToken(UserEntity newUser) {
+    public String generateToken(String email) {
+
         try{
+            System.out.println("Generating token");
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("user-auth-service")
-                    .withSubject(newUser.getEmail())
+                    .withSubject(email)
                     .withExpiresAt(getExpirationDate())
                     .sign(algorithm);
 
@@ -44,7 +45,6 @@ public class TokenService {
                     .getSubject();
         } catch (JWTVerificationException exception){
             System.out.println("--- ERROR: Token invalid ---");
-
             return null;
         }
     }

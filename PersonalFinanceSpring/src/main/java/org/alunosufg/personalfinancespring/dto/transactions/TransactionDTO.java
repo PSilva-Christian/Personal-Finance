@@ -1,4 +1,4 @@
-package org.alunosufg.personalfinancespring.dto;
+package org.alunosufg.personalfinancespring.dto.transactions;
 
 import java.util.Date;
 

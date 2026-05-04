@@ -3,6 +3,8 @@ import { Enviroment } from './../../enviroment';
 import { Injectable } from '@angular/core';
 import { getLastTransactionDTO } from '../models/transactions-dto/getTransactionDTO';
 import { UserGenericDTO } from '../models/user-generic-dto';
+import { DashboardFinancesDTO } from '../models/transactions-dto/dashboard-dto';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +24,9 @@ export class Finances {
 
   getLastTransactionsByQtd(qtd: number, user: UserGenericDTO){
     return this.http.post<getLastTransactionDTO[]>(this.transactionURL + "/transactions/" + qtd, user);
+  }
+
+  getAllTransactions(user: UserGenericDTO){
+    return this.http.post<getLastTransactionDTO[]>(this.transactionURL + "/transactions", user )
   }
 }
